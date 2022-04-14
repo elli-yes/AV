@@ -3,17 +3,29 @@
   <head>
     <meta charset="UTF-8" />
 
-    <title>Dialog</title>
+    <title>16ANTIINFECTOR</title>
   </head>
   <body>
     <style>
       span {
         display: block;
       }
+      #data {
+        display: block;
+        border: 1ps solid black;
+        min-height: 50px;
+        min-width: 90%;
+      }
+      .INF {
+        margin: 10px 10px;
+      }
+      .ok {
+        background-color: lightgreen;
+      }
     </style>
-    <h2>LOGS</h2>
-    <div id="data"></div>
-    <input
+    <h2>16ANTIINFECTOR</h2>
+    <div id="data">Logs of service ...</div>
+    <!-- <input
       style="
         background: lightgrey;
         width: 80%;
@@ -31,16 +43,15 @@
 
     "
       id="submit"
-    >OK</button>
+    >OK</button> -->
     <script>
       require("./renderer.js")
       const { ipcRenderer } = require("electron")
-      
-        function MODE(mod, path) {
-          console.log(mod,path);
-          ipcRenderer.send("terminate", mod, path)
-        }
-        
+
+      function MODE(mod, path, th) {
+        root.innerHTML += `DELETED, ${path}`
+        ipcRenderer.send("terminate", mod, path)
+      }
     </script>
     <script>
       const root = document.getElementById("data")
@@ -50,19 +61,21 @@
         window.scrollTo(0, document.body.scrollHeight)
       })
       ipcRenderer.on("infection", function (e, item) {
+        root.innerHTML = ""
         ipcRenderer.send("stopReading")
         root.innerHTML += `<h2>INFECTIONS</h2>
-        <div>${item.map((infect, i) => {
-          return `<span>${"["+i+"]" + " INFECTED : " + infect.toString()}</span>
+        <div class="INF">${item.map((infect, i) => {
+          return `<span>${
+            "[" + i + "]" + " INFECTED : " + infect.toString()
+          }</span>
           <button onclick="MODE('d','${infect.toString()}')" style="background: lightcoral;">DEL</button> <button onclick="MODE('q','${infect.toString()}')" style="background: lightyellow;">QUA</button>`
         })}</div>`
         window.scrollTo(0, document.body.scrollHeight)
       })
       ipcRenderer.on("noInfection", function (e, item) {
-        root.innerHTML += `<h2>Scan finished NO infections</h2>`
+        root.innerHTML += `<h2>Scan finished</h2>`
         window.scrollTo(0, document.body.scrollHeight)
       })
     </script>
-   
   </body>
 </html>

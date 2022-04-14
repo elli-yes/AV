@@ -37,9 +37,9 @@ const cb = require("./main.js")
 
 function dataMake(str) {
   let CMD = str.substring(0, str.search(":::"))
-  let data = str.substring(str.search(":::") + 3, str.length).split(":")
+  let data = str.substring(str.search(":::") + 3, str.search("<")).split(":")
   let mw = cb.cb()
-  console.log("DARE ", str)
+  // console.log("DARE ", str)
   if (CMD === "INFECTED") {
     mw.webContents.send("infection", data)
   }

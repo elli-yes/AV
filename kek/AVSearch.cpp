@@ -40,7 +40,7 @@ int AVSearch(string fileSig, char filename[255])
 {
   char fname[255];
   strcpy(fname, filename);
-  cout << "VALIDATION\n";
+  // cout << "VALIDATION\n";
   vector<string> VIRUSES;
   fstream MFD("/home/egor/AV/logs.txt", ios_base::app);
   // cout << strcat(filename, "  SCANNED\n") << "\n";
@@ -65,7 +65,7 @@ int AVSearch(string fileSig, char filename[255])
       VIRUSES.push_back(virus);
     };
   }
-  cout << "DONE\n";
+  cout << "DONE ";
 
   db.close();
   if (VIRUSES.size() != 0)

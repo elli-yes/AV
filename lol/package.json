@@ -19,6 +19,7 @@
     "detect-node": "^2.1.0",
     "duplexer3": "^0.1.4",
     "electron": "^18.0.3",
+    "electron-packager": "^15.4.0",
     "encodeurl": "^1.0.2",
     "end-of-stream": "^1.4.4",
     "env-paths": "^2.2.1",
@@ -69,9 +70,9 @@
     "semver-compare": "^1.0.0",
     "serialize-error": "^7.0.1",
     "sprintf-js": "^1.1.2",
+    "string_decoder": "^1.1.1",
     "sumchecker": "^3.0.1",
     "to-readable-stream": "^1.0.0",
-    "string_decoder": "^1.1.1",
     "tunnel": "^0.0.6",
     "type-fest": "^0.13.1",
     "typedarray": "^0.0.6",
@@ -82,9 +83,9 @@
     "yallist": "^4.0.0",
     "yauzl": "^2.10.0"
   },
-  "devDependencies": {},
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "package-linux": "electron-packager . --overwrite --platform=linux --arch=x64  --prune=true --out=release-builds"
   },
   "author": "",
   "license": "ISC"

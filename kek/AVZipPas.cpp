@@ -12,9 +12,9 @@
 #include <fcntl.h>
 
 using namespace std;
-int enumerateArchive(char *filePath, const char *archiveRoot);
+int enumerateArchivePas(char *filePath, const char *archiveRoot);
 
-static int writeCurrentFile(int i, struct zip *za, struct zip_stat zipStat, char bufForFileName[])
+static int writeCurrentFilePas(int i, struct zip *za, struct zip_stat zipStat, char bufForFileName[])
 {
 
   struct zip_file *zipFile;  // Структура для работы с текущим файлом архива
@@ -23,9 +23,23 @@ static int writeCurrentFile(int i, struct zip *za, struct zip_stat zipStat, char
   char buf[512];             // Буфер для чтения информации из архива
   char pswd[255];            // Password for archive
 
-  zipFile = zip_fopen_index(za, i, 0);
+  printf("Имя файла: [%s] ", zipStat.name);
+  printf("Размер: [%llu], ", zipStat.size);
+  printf("Зашифрован: [%llu], ", zipStat.encryption_method);
+  printf("\n");
+  if (zipStat.encryption_method)
+  {
+    cout << "Pass for " << zipStat.name << "\n";
+    cin >> pswd;
+    zipFile = zip_fopen_index_encrypted(za, i, 0, pswd);
+  }
+  else
+  {
+    zipFile = zip_fopen_index(za, i, 0);
+  }
   if (!zipFile)
   {
+
     return 1;
   }
   fd = open(bufForFileName, O_RDWR | O_TRUNC | O_CREAT, 0644); //Создать файл
@@ -64,7 +78,6 @@ static int loopThroughFiles(const char *archiveRoot, struct zip *za, const char 
   int i;                        // Переменная для итерирования
   struct zip_stat zipStat;      // Информация о файле
   size_t currentItemNameLength; // Длина имени текущего элемента в архиве
-  bool encrypted = 0;
 
   for (i = 0; i < zip_get_num_entries(za, 0); i++)
   {
@@ -73,14 +86,19 @@ static int loopThroughFiles(const char *archiveRoot, struct zip *za, const char 
     {
 
       currentItemNameLength = strlen(zipStat.name);
-      // cout << "Имя файла: [ " << zipStat.name <<
-      // printf("Размер: [%llu], ", zipStat.size);
-      // printf("Зашифрован: [%llu], ", zipStat.encryption_method);
-      // printf("\n");
+
       char bufForFileName[300]; // Буфер для имени файла с учётом корневой папки
 
-      strcpy(bufForFileName, "/home/egor/AV/zip/");
-      strcat(bufForFileName, zipStat.name);
+      if (zipStat.encryption_method)
+      {
+        cout << zipStat.encryption_method << "\n";
+        strcpy(bufForFileName, archiveRoot);
+        strcat(bufForFileName, zipStat.name);
+      }
+      else
+      {
+        return 1;
+      }
 
       if (zipStat.name[currentItemNameLength - 1] == '/')
       { // Если текущий элемент архива - папка, то нужно создать папку на диске
@@ -96,25 +114,23 @@ static int loopThroughFiles(const char *archiveRoot, struct zip *za, const char 
       }
       else if (string(zipStat.name).find(".zip") != -1)
       {
-
-        cout << " ENCRIPTION " << zipStat.encryption_method << "\n";
-        writeCurrentFile(i, za, zipStat, bufForFileName);
-        char zipper[255] = "/home/egor/AV/zip/";
+        writeCurrentFilePas(i, za, zipStat, bufForFileName);
+        char zipper[255] = "/home/egor/AV/zipPas/";
         strcat(zipper, zipStat.name);
 
-        enumerateArchive(zipper, archiveRoot);
+        enumerateArchivePas(zipper, archiveRoot);
         remove(zipper);
       }
       else
       { // Текущий элемент - файл, а значит нужно последовательно считать все данные и записать их на диск
 
-        writeCurrentFile(i, za, zipStat, bufForFileName);
+        writeCurrentFilePas(i, za, zipStat, bufForFileName);
       }
     }
   }
   return 0;
 }
-int enumerateArchive(char *filePath, const char *archiveRoot)
+int enumerateArchivePas(char *filePath, const char *archiveRoot)
 {
 
   struct zip *za; // Структура для работы с архивом
@@ -136,10 +152,11 @@ int enumerateArchive(char *filePath, const char *archiveRoot)
   return 0;
 }
 
-int AVZip(char *path)
+int AVZipPas(char *path)
 {
-  cout << "ARCHIVE AT : " << path << "\n";
-  enumerateArchive(path, "/home/egor/AV/zip/");
+  cout << "ARCHIVE PAS AT : " << path << "\n";
+
+  enumerateArchivePas(path, "/home/egor/AV/zipPas/");
 
   return 0;
 }

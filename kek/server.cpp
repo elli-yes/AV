@@ -51,7 +51,7 @@ int serverStart()
       perror("accept");
       exit(3);
     }
-    sleep(3);
+    // sleep(3);
     while (1)
     {
       bzero(buf, 256);
@@ -59,7 +59,7 @@ int serverStart()
       if (bytes_read <= 0)
         break;
       Interface(buf, sock);
-      sleep(3);
+      // sleep(3);
       // send(sock, buf, bytes_read, 0);
     }
     // sleep(5);
@@ -69,10 +69,10 @@ int serverStart()
 }
 int callback(string str)
 {
-  cout << sock;
+  // cout << sock;
   if (!Interface(str, sock))
   {
-    cout << sock;
+    // cout << sock;
     return 0;
   }
   cout << "ERROR\n";

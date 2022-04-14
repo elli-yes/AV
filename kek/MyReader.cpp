@@ -59,7 +59,7 @@ int MyReader()
   while (!file.eof())
   {
     file >> buff;
-    cout << buff << " SCAN\n";
+    // cout << buff << " SCAN\n";
 
     content(buff);
   }
@@ -78,7 +78,9 @@ int MyReader()
       }
     }
     callback(cmd);
+    return 0;
   }
+
   callback("NO_INFECTIONS:::");
   return 0;
 }

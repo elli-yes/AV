@@ -21,8 +21,9 @@ const createWindow = () => {
     },
   })
 
+  mainWindow.setTitle("16Anti Infector")
   mainWindow.loadFile("index.html")
-  mainWindow.openDevTools()
+  // mainWindow.openDevTools()
 }
 let timer
 let dataded
