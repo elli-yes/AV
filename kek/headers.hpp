@@ -16,3 +16,4 @@ int Interface(std::string, int);
 int callback(std::string);
 int rdCallback(std::vector<std::string>);
 void scanCallback(void);
+int QRESTORE(std::string);

@@ -27,12 +27,17 @@ int AVScanFile(string VS, string FS)
   // {
   //   sleep(5);
   // }
+  cout << "GET  " << VS << "\n";
+  cout << "INB  " << FS << "\n";
 
   int result = FS.find(VS);
+  cout << result;
+  // cout << FS.substr(result, VS.length());
   if (result != -1)
   {
     return 1;
   }
+  cout << "VIRUSED\n";
   return 0;
 }
 

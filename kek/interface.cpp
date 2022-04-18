@@ -15,7 +15,7 @@ int Interface(string Command, int socket)
   if (CMD == "SCAN_ALL")
   {
     cout << "SCAN ALL\n";
-    MyIteraror("/home/egor/Documents/test/test1", 0);
+    MyIteraror("/home/egor/", 0);
     cout << "Scanning\n";
     MyReader();
     MyIteraror("/home/egor/AV/zip", 0);
@@ -66,12 +66,21 @@ int Interface(string Command, int socket)
   }
   if (CMD == "QUART")
   {
+    cout << "GET_Q\n";
     AVQuarantine(DATA);
   }
 
   if (CMD == "KILL")
   {
     remove(DATA.c_str());
+  }
+  if (CMD == "Q_DEL")
+  {
+    remove(DATA.c_str());
+  }
+  if (CMD == "Q_RES")
+  {
+    QRESTORE(DATA.c_str());
   }
   if (CMD == "NO_INFECTIONS")
   {

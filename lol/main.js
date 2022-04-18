@@ -1,13 +1,28 @@
 const { app, BrowserWindow, Menu, dialog } = require("electron")
 const path = require("path")
-const SC = require("./socket")
-const LG = require("./logger")
+const { exec } = require("child_process")
+
+// exec(
+//   "systemctl status AVService| grep 'dead' | awk '{print $3}'",
+//   (error, stdout, stderr) => {
+//     if (stdout.trim() == "(dead)") {
+//       exec("systemctl start AVService", (error, stdout, stderr) => {
+//         console.log(stdout)
+//       })
+//     }
+//   }
+// )
+
+const SC = require("./socket")k
+// const LG = require("./logger")
 
 const { ipcMain } = require("electron")
 
-ipcMain.on("infection", () => {
-  console.log("PIZDA")
-})
+// if (system("systemctl status AVService | grep 'dead'") == 0) {
+//   system("systemctl start AVService")
+// }
+
+ipcMain.on("infection", () => {})
 let mainWindow
 
 const createWindow = () => {
@@ -25,20 +40,20 @@ const createWindow = () => {
   mainWindow.loadFile("index.html")
   // mainWindow.openDevTools()
 }
-let timer
-let dataded
-function ddF(data) {
-  dataded = data
-}
-timer = setInterval(() => {
-  LG.GL(ddF)
-  if (dataded) {
-    mainWindow.webContents.send("new_data", dataded)
-  }
-}, 5000)
+// let timer
+// let dataded
+// function ddF(data) {
+//   dataded = data
+// }
+// timer = setInterval(() => {
+//   // LG.GL(ddF)
+//   if (dataded) {
+//     mainWindow.webContents.send("new_data", dataded)
+//   }
+// }, 5000)
 
 ipcMain.on("stopReading", () => {
-  clearInterval(timer)
+  // clearInterval(timer)
 })
 
 ipcMain.on("terminate", (e, mod, path) => {
@@ -115,15 +130,48 @@ const template = [
     ],
   },
   {
-    label: "Pause/Stop",
+    label: "Quarantine",
     submenu: [
       {
-        label: "Pause",
+        label: "Q restore",
         click() {
-          SC.SD("PAUSE:::")
+          let cmd
+          dialog
+            .showOpenDialog(mainWindow, {
+              properties: ["openFile"],
+              defaultPath: "/home/egor/AV/Quarantine",
+            })
+            .then((result) => {
+              if (!result.canceled) {
+                cmd = result.filePaths
+                SC.SD("Q_RES:::" + cmd)
+              }
+            })
+            .catch((err) => {
+              console.log(err)
+            })
         },
       },
-      { label: "Stop", click() {} },
+      {
+        label: "Q delete",
+        click() {
+          let cmd
+          dialog
+            .showOpenDialog(mainWindow, {
+              properties: ["openFile"],
+              defaultPath: "/home/egor/AV/Quarantine",
+            })
+            .then((result) => {
+              if (!result.canceled) {
+                cmd = result.filePaths
+                SC.SD("Q_DEL:::" + cmd)
+              }
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        },
+      },
     ],
   },
   {

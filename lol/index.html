@@ -49,7 +49,12 @@
       const { ipcRenderer } = require("electron")
 
       function MODE(mod, path, th) {
-        root.innerHTML += `DELETED, ${path}`
+        if (mod == "q") {
+          root.innerHTML += `QUARANTINED, ${path}`
+        }
+        if (mod == "d") {
+          root.innerHTML += `DELETED, ${path}`
+        }
         ipcRenderer.send("terminate", mod, path)
       }
     </script>
